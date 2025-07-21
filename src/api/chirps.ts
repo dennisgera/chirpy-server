@@ -9,25 +9,13 @@ export async function handlerChirpsValidate(
     body: string;
   };
 
-  let body = "";
+  const params: Parameters = req.body;
 
-  req.on("data", (chunk) => {
-    body += chunk;
-  });
+  const maxLength = 140;
+  if (params.body.length > maxLength) {
+    respondWithError(res, 400, "Chirp is too long");
+    return;
+  }
 
-  let params: Parameters;
-  req.on("end", () => {
-    try {
-      params = JSON.parse(body);
-    } catch (error) {
-      respondWithError(res, 400, "Something went wrong");
-      return;
-    }
-    const maxLength = 140;
-    if (params.body.length > maxLength) {
-      respondWithError(res, 400, "Chirp is too long");
-    } else {
-      respondWithJSON(res, 200, { valid: true });
-    }
-  });
+  respondWithJSON(res, 200, { valid: true });
 }
