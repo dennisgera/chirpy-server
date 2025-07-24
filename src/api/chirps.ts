@@ -1,5 +1,6 @@
 import type { NextFunction, Request, Response } from "express";
-import { respondWithError, respondWithJSON } from "./json.js";
+import { respondWithJSON } from "./json.js";
+import { BadRequestError } from "./errors.js";
 
 const profaneWords = ["kerfuffle", "sharbert", "fornax"];
 
@@ -17,7 +18,9 @@ export async function handlerChirpsValidate(
 
     const maxLength = 140;
     if (params.body.length > maxLength) {
-      throw new Error("Chirp is too long");
+      throw new BadRequestError(
+        `Chirp is too long. Max length is ${maxLength}`
+      );
     }
 
     if (profaneWords.some((word) => params.body.toLowerCase().includes(word))) {
