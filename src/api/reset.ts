@@ -7,7 +7,7 @@ export async function handlerReset(
   next: NextFunction
 ) {
   try {
-    config.fileserverHits = 0;
+    config.api.fileServerHits = 0;
     res.send("OK");
     res.end();
   } catch (err) {
