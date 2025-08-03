@@ -14,7 +14,5 @@ export function respondWithJSON(
   json: any
 ): void {
   res.header("Content-Type", "application/json");
-  const body = JSON.stringify(json);
   res.status(status).send(json);
-  res.end();
 }

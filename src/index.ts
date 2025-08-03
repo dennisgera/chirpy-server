@@ -2,14 +2,13 @@ import express from "express";
 import { handlerReadiness } from "./api/readiness.js";
 import { handlerMetrics } from "./api/metrics.js";
 import { handlerReset } from "./api/reset.js";
-import { handlerChirpsValidate } from "./api/chirps.js";
 import {
   middlewareMetricsInc,
   middlewareLogResponses,
   middlewareErrorHandler,
 } from "./api/middleware.js";
 import { handlerCreateUser } from "./api/users.js";
-
+import { handlerCreateChirp } from "./api/chirps.js";
 import { migrate } from "drizzle-orm/postgres-js/migrator";
 import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
@@ -28,8 +27,8 @@ app.use("/app", middlewareMetricsInc, express.static("./src/app"));
 app.get("/api/healthz", handlerReadiness);
 app.get("/admin/metrics", handlerMetrics);
 app.post("/admin/reset", handlerReset);
-app.post("/api/validate_chirp", handlerChirpsValidate);
 app.post("/api/users", handlerCreateUser);
+app.post("/api/chirps", handlerCreateChirp);
 
 app.use(middlewareErrorHandler);
 

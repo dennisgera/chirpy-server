@@ -1,43 +1,49 @@
 import type { NextFunction, Request, Response } from "express";
 import { respondWithJSON } from "./json.js";
 import { BadRequestError } from "./errors.js";
+import { createChirp } from "../db/queries/chirps.js";
 
-const profaneWords = ["kerfuffle", "sharbert", "fornax"];
+function validateChirp(body: string) {
+  const maxChirpLength = 140;
+  if (body.length > maxChirpLength) {
+    throw new BadRequestError(
+      `Chirp is too long. Max length is ${maxChirpLength}`
+    );
+  }
 
-export async function handlerChirpsValidate(
+  const badWords = ["kerfuffle", "sharbert", "fornax"];
+  return getCleanedBody(body, badWords);
+}
+
+function getCleanedBody(body: string, badWords: string[]) {
+  const words = body.split(" ");
+
+  for (let i = 0; i < words.length; i++) {
+    const word = words[i];
+    const loweredWord = word.toLowerCase();
+    if (badWords.includes(loweredWord)) {
+      words[i] = "****";
+    }
+  }
+
+  const cleaned = words.join(" ");
+  return cleaned;
+}
+
+export async function handlerCreateChirp(
   req: Request,
   res: Response,
   next: NextFunction
 ): Promise<void> {
   type Parameters = {
     body: string;
+    userId: string;
   };
-
+  const params: Parameters = req.body;
   try {
-    const params: Parameters = req.body;
-
-    const maxLength = 140;
-    if (params.body.length > maxLength) {
-      throw new BadRequestError(
-        `Chirp is too long. Max length is ${maxLength}`
-      );
-    }
-
-    if (profaneWords.some((word) => params.body.toLowerCase().includes(word))) {
-      // Replace each profane word with ****
-      let cleanedBody = params.body;
-      for (const word of profaneWords) {
-        const escapedWord = word.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-        // Match word boundary at start, but not followed by punctuation at end
-        const regex = new RegExp(`\\b${escapedWord}(?![!.,;:?])`, "gi");
-        cleanedBody = cleanedBody.replace(regex, "****");
-      }
-      respondWithJSON(res, 200, { cleanedBody });
-      return;
-    }
-
-    respondWithJSON(res, 200, { cleanedBody: params.body });
-    return;
+    const cleaned = validateChirp(params.body);
+    const chirp = await createChirp({ body: cleaned, userId: params.userId });
+    respondWithJSON(res, 201, chirp);
   } catch (err) {
     next(err);
   }
