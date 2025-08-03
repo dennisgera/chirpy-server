@@ -1,7 +1,7 @@
 import type { NextFunction, Request, Response } from "express";
 import { respondWithJSON } from "./json.js";
 import { BadRequestError } from "./errors.js";
-import { createChirp } from "../db/queries/chirps.js";
+import { createChirp, getChirpById, getChirps } from "../db/queries/chirps.js";
 
 function validateChirp(body: string) {
   const maxChirpLength = 140;
@@ -44,6 +44,32 @@ export async function handlerCreateChirp(
     const cleaned = validateChirp(params.body);
     const chirp = await createChirp({ body: cleaned, userId: params.userId });
     respondWithJSON(res, 201, chirp);
+  } catch (err) {
+    next(err);
+  }
+}
+
+export async function handlerGetChirps(
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> {
+  try {
+    const chirps = await getChirps();
+    respondWithJSON(res, 200, chirps);
+  } catch (err) {
+    next(err);
+  }
+}
+
+export async function handlerGetChirpById(
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> {
+  try {
+    const chirp = await getChirpById(req.params.id);
+    respondWithJSON(res, 200, chirp);
   } catch (err) {
     next(err);
   }

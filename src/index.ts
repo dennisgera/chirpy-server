@@ -8,7 +8,11 @@ import {
   middlewareErrorHandler,
 } from "./api/middleware.js";
 import { handlerCreateUser } from "./api/users.js";
-import { handlerCreateChirp } from "./api/chirps.js";
+import {
+  handlerCreateChirp,
+  handlerGetChirpById,
+  handlerGetChirps,
+} from "./api/chirps.js";
 import { migrate } from "drizzle-orm/postgres-js/migrator";
 import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
@@ -29,6 +33,8 @@ app.get("/admin/metrics", handlerMetrics);
 app.post("/admin/reset", handlerReset);
 app.post("/api/users", handlerCreateUser);
 app.post("/api/chirps", handlerCreateChirp);
+app.get("/api/chirps", handlerGetChirps);
+app.get("/api/chirps/:id", handlerGetChirpById);
 
 app.use(middlewareErrorHandler);
 
