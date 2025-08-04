@@ -15,6 +15,13 @@
       "when": 1754248345906,
       "tag": "0001_condemned_ma_gnuci",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1754251096852,
+      "tag": "0002_salty_maginty",
+      "breakpoints": true
     }
   ]
 }
