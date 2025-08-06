@@ -67,3 +67,17 @@ export function validateJWT(
 
   return decoded.sub;
 }
+
+export function getBearerToken(req: Request): string {
+  const authHeader = req.headers.get("Authorization");
+  if (!authHeader) {
+    throw new UserNotAuthenticatedError("Missing Authorization header");
+  }
+
+  const [bearer, token] = authHeader.split(" ");
+  if (bearer !== "Bearer") {
+    throw new UserNotAuthenticatedError("Invalid Authorization header");
+  }
+
+  return token;
+}

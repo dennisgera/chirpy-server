@@ -1,5 +1,11 @@
 import { describe, it, expect, beforeAll } from "vitest";
-import { checkPasswordHash, hashPassword, makeJWT, validateJWT } from "./auth";
+import {
+  checkPasswordHash,
+  getBearerToken,
+  hashPassword,
+  makeJWT,
+  validateJWT,
+} from "./auth";
 import { UserNotAuthenticatedError } from "./api/errors";
 
 describe("Password Hashing", () => {
@@ -64,5 +70,25 @@ describe("JWT Functions", () => {
     expect(() => validateJWT(validToken, wrongSecret)).toThrow(
       UserNotAuthenticatedError
     );
+  });
+});
+
+describe("BearerToken Functions", () => {
+  it("should return the token from the Authorization header", () => {
+    const req = {
+      headers: {
+        get: (header: string) =>
+          header === "Authorization" ? "Bearer someToken" : "",
+      },
+    } as Request;
+
+    const token = getBearerToken(req);
+    expect(token).toBe("someToken");
+  });
+
+  it("should throw an error when the Authorization header is missing", () => {
+    const req = {
+      headers: {},
+    } as Request;
   });
 });
