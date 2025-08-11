@@ -1,6 +1,7 @@
 import bcrypt from "bcrypt";
 import jwt, { JwtPayload } from "jsonwebtoken";
-import { UserNotAuthenticatedError } from "./api/errors";
+import { UserNotAuthenticatedError } from "./api/errors.js";
+import { Request } from "express";
 
 const TOKEN_ISSUER = "chirpy";
 type Payload = Pick<JwtPayload, "sub" | "exp" | "iss" | "iat">;
@@ -69,7 +70,7 @@ export function validateJWT(
 }
 
 export function getBearerToken(req: Request): string {
-  const authHeader = req.headers.get("Authorization");
+  const authHeader = req.headers.authorization;
   if (!authHeader) {
     throw new UserNotAuthenticatedError("Missing Authorization header");
   }

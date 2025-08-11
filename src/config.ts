@@ -21,9 +21,14 @@ type APIConfig = {
   platform: string;
 };
 
+type JWTConfig = {
+  secret: string;
+};
+
 type Config = {
   api: APIConfig;
   db: DBConfig;
+  jwt: JWTConfig;
 };
 
 const migrationConfig: MigrationConfig = {
@@ -39,6 +44,9 @@ const config: Config = {
   db: {
     url: envOrThrow("DB_URL"),
     migrationConfig,
+  },
+  jwt: {
+    secret: envOrThrow("JWT_SECRET"),
   },
 };
 

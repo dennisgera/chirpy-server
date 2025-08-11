@@ -2,6 +2,8 @@ import type { NextFunction, Request, Response } from "express";
 import { respondWithJSON } from "./json.js";
 import { BadRequestError } from "./errors.js";
 import { createChirp, getChirpById, getChirps } from "../db/queries/chirps.js";
+import { getBearerToken, validateJWT } from "../auth.js";
+import config from "../config.js";
 
 function validateChirp(body: string) {
   const maxChirpLength = 140;
@@ -37,12 +39,16 @@ export async function handlerCreateChirp(
 ): Promise<void> {
   type Parameters = {
     body: string;
-    userId: string;
   };
-  const params: Parameters = req.body;
   try {
+    const params: Parameters = req.body;
+    const token = getBearerToken(req);
+    const userId = validateJWT(token, config.jwt.secret);
     const cleaned = validateChirp(params.body);
-    const chirp = await createChirp({ body: cleaned, userId: params.userId });
+    const chirp = await createChirp({
+      body: cleaned,
+      userId: userId,
+    });
     respondWithJSON(res, 201, chirp);
   } catch (err) {
     next(err);

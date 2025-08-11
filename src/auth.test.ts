@@ -1,4 +1,5 @@
 import { describe, it, expect, beforeAll } from "vitest";
+import { Request } from "express";
 import {
   checkPasswordHash,
   getBearerToken,
@@ -77,8 +78,7 @@ describe("BearerToken Functions", () => {
   it("should return the token from the Authorization header", () => {
     const req = {
       headers: {
-        get: (header: string) =>
-          header === "Authorization" ? "Bearer someToken" : "",
+        authorization: "Bearer someToken",
       },
     } as Request;
 
@@ -90,5 +90,7 @@ describe("BearerToken Functions", () => {
     const req = {
       headers: {},
     } as Request;
+
+    expect(() => getBearerToken(req)).toThrow("Missing Authorization header");
   });
 });
