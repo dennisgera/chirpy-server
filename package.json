@@ -20,7 +20,9 @@
     "build": "npx tsc",
     "start": "node dist/index.js",
     "dev": "npx tsc && node dist/index.js",
-    "test": "vitest --run"
+    "test": "vitest --run",
+    "migrate": "drizzle-kit migrate",
+    "generate": "drizzle-kit generate"
   },
   "dependencies": {
     "bcrypt": "^6.0.0",

@@ -1,5 +1,6 @@
 import bcrypt from "bcrypt";
 import jwt, { JwtPayload } from "jsonwebtoken";
+import crypto from "crypto";
 import { UserNotAuthenticatedError } from "./api/errors.js";
 import { Request } from "express";
 
@@ -22,11 +23,11 @@ export async function checkPasswordHash(
 
 export function makeJWT(
   userID: string,
-  expiresIn: string,
+  expiresIn: number,
   secret: string
 ): string {
   const issuedAt = Math.floor(Date.now() / 1000);
-  const expiresAt = issuedAt + parseInt(expiresIn);
+  const expiresAt = issuedAt + expiresIn;
   const token = jwt.sign(
     {
       iss: TOKEN_ISSUER,
@@ -81,4 +82,8 @@ export function getBearerToken(req: Request): string {
   }
 
   return token;
+}
+
+export function makeRefreshToken() {
+  return crypto.randomBytes(32).toString("hex");
 }

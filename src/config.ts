@@ -23,6 +23,9 @@ type APIConfig = {
 
 type JWTConfig = {
   secret: string;
+  issuer: string;
+  defaultDuration: number;
+  refreshDuration: number;
 };
 
 type Config = {
@@ -47,6 +50,9 @@ const config: Config = {
   },
   jwt: {
     secret: envOrThrow("JWT_SECRET"),
+    issuer: envOrThrow("JWT_ISSUER"),
+    defaultDuration: Number(envOrThrow("JWT_DEFAULT_DURATION")),
+    refreshDuration: Number(envOrThrow("JWT_REFRESH_DURATION")),
   },
 };
 

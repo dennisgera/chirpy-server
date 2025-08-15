@@ -22,6 +22,20 @@
       "when": 1754251096852,
       "tag": "0002_salty_maginty",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1755260440274,
+      "tag": "0003_soft_korg",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1755260564702,
+      "tag": "0004_solid_starfox",
+      "breakpoints": true
     }
   ]
 }

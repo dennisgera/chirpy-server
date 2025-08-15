@@ -53,7 +53,7 @@ describe("JWT Functions", () => {
   let validToken: string;
 
   beforeAll(async () => {
-    validToken = await makeJWT(userID, "3600", secret);
+    validToken = makeJWT(userID, 3600, secret);
   });
 
   it("should return the userID from a valid token", async () => {
