@@ -12,7 +12,7 @@ import {
   handlerRefreshToken,
   handlerRevokeToken,
 } from "./api/auth.js";
-import { handlerCreateUser } from "./api/users.js";
+import { handlerCreateUser, handlerUpdateUser } from "./api/users.js";
 import {
   handlerCreateChirp,
   handlerGetChirpById,
@@ -37,6 +37,7 @@ app.get("/api/healthz", handlerReadiness);
 app.get("/admin/metrics", handlerMetrics);
 app.post("/admin/reset", handlerReset);
 app.post("/api/users", handlerCreateUser);
+app.put("/api/users", handlerUpdateUser);
 app.post("/api/login", handlerLogin);
 app.post("/api/refresh", handlerRefreshToken);
 app.post("/api/revoke", handlerRevokeToken);
