@@ -1,7 +1,12 @@
 import type { NextFunction, Request, Response } from "express";
 import { respondWithJSON } from "./json.js";
 import { BadRequestError } from "./errors.js";
-import { createChirp, getChirpById, getChirps } from "../db/queries/chirps.js";
+import {
+  createChirp,
+  deleteChirp,
+  getChirpById,
+  getChirps,
+} from "../db/queries/chirps.js";
 import { getBearerToken, validateJWT } from "../auth.js";
 import config from "../config.js";
 
@@ -75,7 +80,40 @@ export async function handlerGetChirpById(
 ): Promise<void> {
   try {
     const chirp = await getChirpById(req.params.id);
+    if (!chirp) {
+      res.status(404).send();
+      return;
+    }
     respondWithJSON(res, 200, chirp);
+  } catch (err) {
+    next(err);
+  }
+}
+
+export async function handlerDeleteChirp(
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> {
+  try {
+    const token = getBearerToken(req);
+    const userId = validateJWT(token, config.jwt.secret);
+    if (!userId) {
+      res.status(401).send();
+      return;
+    }
+    const chirp = await getChirpById(req.params.id);
+    if (!chirp) {
+      res.status(404).send();
+      return;
+    }
+    if (userId !== chirp.userId) {
+      res.status(403).send();
+      return;
+    }
+
+    await deleteChirp(req.params.id);
+    res.status(204).send();
   } catch (err) {
     next(err);
   }

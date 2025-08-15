@@ -17,6 +17,7 @@ import {
   handlerCreateChirp,
   handlerGetChirpById,
   handlerGetChirps,
+  handlerDeleteChirp,
 } from "./api/chirps.js";
 import { migrate } from "drizzle-orm/postgres-js/migrator";
 import { drizzle } from "drizzle-orm/postgres-js";
@@ -44,6 +45,7 @@ app.post("/api/revoke", handlerRevokeToken);
 app.post("/api/chirps", handlerCreateChirp);
 app.get("/api/chirps", handlerGetChirps);
 app.get("/api/chirps/:id", handlerGetChirpById);
+app.delete("/api/chirps/:id", handlerDeleteChirp);
 
 app.use(middlewareErrorHandler);
 
