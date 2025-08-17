@@ -68,9 +68,10 @@ export async function handlerGetChirps(
   try {
     type Parameters = {
       authorId?: string;
+      sort?: "asc" | "desc";
     };
     const params: Parameters = req.query;
-    const chirps = await getChirps(params.authorId);
+    const chirps = await getChirps(params.authorId, params.sort);
     respondWithJSON(res, 200, chirps);
   } catch (err) {
     next(err);

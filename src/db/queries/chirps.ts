@@ -1,25 +1,27 @@
 import { db } from "../index.js";
 import { Chirp, NewChirp, chirps } from "../schema.js";
-import { asc, eq } from "drizzle-orm";
+import { asc, desc, eq } from "drizzle-orm";
 
 export async function createChirp(chirp: NewChirp): Promise<Chirp> {
   const [result] = await db.insert(chirps).values(chirp).returning();
   return result;
 }
 
-export async function getChirps(authorId?: string): Promise<Chirp[]> {
+export async function getChirps(
+  authorId?: string,
+  sort?: "asc" | "desc"
+): Promise<Chirp[]> {
+  const orderBy =
+    sort === "asc" ? asc(chirps.createdAt) : desc(chirps.createdAt);
   if (authorId) {
     const result = await db
       .select()
       .from(chirps)
       .where(eq(chirps.userId, authorId))
-      .orderBy(asc(chirps.createdAt));
+      .orderBy(orderBy);
     return result;
   } else {
-    const result = await db
-      .select()
-      .from(chirps)
-      .orderBy(asc(chirps.createdAt));
+    const result = await db.select().from(chirps).orderBy(orderBy);
     return result;
   }
 }
