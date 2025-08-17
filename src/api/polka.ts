@@ -1,5 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { updateUserIsChirpyRed } from "../db/queries/users.js";
+import { getAPIKey } from "../auth.js";
+import config from "../config.js";
 
 export async function handlerPolkaWebhooks(
   req: Request,
@@ -7,6 +9,11 @@ export async function handlerPolkaWebhooks(
   next: NextFunction
 ): Promise<void> {
   try {
+    const apiKey = getAPIKey(req);
+    if (apiKey !== config.api.polkaApiKey) {
+      res.status(401).send();
+      return;
+    }
     type Body = {
       event: string;
       data: {
