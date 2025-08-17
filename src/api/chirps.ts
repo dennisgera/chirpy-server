@@ -66,7 +66,11 @@ export async function handlerGetChirps(
   next: NextFunction
 ): Promise<void> {
   try {
-    const chirps = await getChirps();
+    type Parameters = {
+      authorId?: string;
+    };
+    const params: Parameters = req.query;
+    const chirps = await getChirps(params.authorId);
     respondWithJSON(res, 200, chirps);
   } catch (err) {
     next(err);
