@@ -19,11 +19,23 @@ export async function getUserByEmail(email: string): Promise<User | null> {
 export async function updateUser(
   userId: string,
   update: UserUpdate
-): Promise<User> {
+): Promise<User | null> {
   const { email, hashedPassword } = update;
   const [result] = await db
     .update(users)
     .set({ email, hashedPassword, updatedAt: new Date() })
+    .where(eq(users.id, userId))
+    .returning();
+  return result;
+}
+
+export async function updateUserIsChirpyRed(
+  userId: string,
+  isChirpyRed: boolean
+): Promise<User | null> {
+  const [result] = await db
+    .update(users)
+    .set({ isChirpyRed, updatedAt: new Date() })
     .where(eq(users.id, userId))
     .returning();
   return result;

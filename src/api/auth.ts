@@ -64,6 +64,7 @@ export async function handlerLogin(
       updatedAt: user.updatedAt,
       token: accessToken,
       refreshToken: refreshToken,
+      isChirpyRed: user.isChirpyRed,
     } satisfies LoginResponse);
   } catch (err) {
     next(err);

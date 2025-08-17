@@ -38,6 +38,7 @@ export async function handlerCreateUser(
       email: user.email,
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,
+      isChirpyRed: user.isChirpyRed,
     } satisfies UserResponse);
   } catch (err) {
     next(err);
@@ -80,6 +81,7 @@ export async function handlerUpdateUser(
       email: user.email,
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,
+      isChirpyRed: user.isChirpyRed,
     } satisfies UserResponse);
   } catch (err) {
     next(err);
